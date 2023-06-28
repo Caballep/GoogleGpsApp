@@ -1,4 +1,4 @@
-package com.example.googlegpsapp.ui.theme
+package com.example.googlegpsapp.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
