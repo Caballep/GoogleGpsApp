@@ -25,8 +25,11 @@ class LandingViewModel @Inject constructor(
     private var locationProcessingJob: Job? = null
     private var getLocationJob: Job? = null
 
-    private val _locationProcessingEvent = MutableStateFlow<LocationProcessingEvent>(LocationProcessingEvent.Initial)
-    val locationProcessingEvent: StateFlow<LocationProcessingEvent> = _locationProcessingEvent.asStateFlow()
+    private val _locationProcessingEvent =
+        MutableStateFlow<LocationProcessingEvent>(LocationProcessingEvent.Initial)
+    val locationProcessingEvent: StateFlow<LocationProcessingEvent> =
+        _locationProcessingEvent.asStateFlow()
+
     private fun emitSaveLocationEvent(event: LocationProcessingEvent) {
         _locationProcessingEvent.value = event
     }
@@ -49,7 +52,11 @@ class LandingViewModel @Inject constructor(
                     if (result.errorType == ErrorType.LOCATION_NO_PERMISSIONS) {
                         emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
                     }
-                    emitSaveLocationEvent(LocationProcessingEvent.Error)
+                    if (result.errorType == ErrorType.LOCATION_NULL_DATA) {
+                        emitSaveLocationEvent(LocationProcessingEvent.LocationNullError)
+                    } else {
+                        emitSaveLocationEvent(LocationProcessingEvent.Error)
+                    }
                 }
             }
         }
@@ -59,14 +66,11 @@ class LandingViewModel @Inject constructor(
         locationProcessingJob?.cancel()
         emitSaveLocationEvent(LocationProcessingEvent.Processing)
         locationProcessingJob = viewModelScope.launch {
-            when (val result = deleteLocationUseCase.invoke(id)) {
+            when (deleteLocationUseCase.invoke(id)) {
                 is Outcome.Success -> {
                     emitSaveLocationEvent(LocationProcessingEvent.Done)
                 }
                 is Outcome.Error -> {
-                    if (result.errorType == ErrorType.LOCATION_NO_PERMISSIONS) {
-                        emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
-                    }
                     emitSaveLocationEvent(LocationProcessingEvent.Error)
                 }
             }
@@ -77,12 +81,13 @@ class LandingViewModel @Inject constructor(
         getLocationJob?.cancel()
         emitLocationsEvent(LocationsEvent.Loading)
         getLocationJob = viewModelScope.launch {
-            when(val result = getLocationUseCase.invoke()) {
+            when (val result = getLocationUseCase.invoke()) {
                 is Outcome.Success -> {
                     if (result.data.isEmpty()) {
-                        emitLocationsEvent(LocationsEvent.NoData)
+                        emitLocationsEvent(LocationsEvent.EmptyData)
+                    } else {
+                        emitLocationsEvent(LocationsEvent.Data(result.data))
                     }
-                    emitLocationsEvent(LocationsEvent.Data(result.data))
                 }
                 is Outcome.Error -> {
                     emitLocationsEvent(LocationsEvent.Error)

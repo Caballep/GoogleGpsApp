@@ -7,6 +7,7 @@ sealed class LocationProcessingEvent {
     object Processing : LocationProcessingEvent()
     object Done : LocationProcessingEvent()
     object LocationPermissionsError : LocationProcessingEvent()
+    object LocationNullError : LocationProcessingEvent()
     object Error : LocationProcessingEvent()
 }
 
@@ -14,7 +15,7 @@ sealed class LocationsEvent {
     object Initial : LocationsEvent()
     object Loading : LocationsEvent()
     data class Data(val locations: List<LocationModel>) : LocationsEvent()
-    object NoData : LocationsEvent()
+    object EmptyData : LocationsEvent()
     object Error: LocationsEvent()
 }
 

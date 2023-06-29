@@ -1,5 +1,6 @@
 package com.example.googlegpsapp.presentation.screen.landing
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,12 +8,14 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.googlegpsapp.domain.model.LocationModel
+import com.example.googlegpsapp.presentation.screen.landing.composables.InfoContainer
 import com.example.googlegpsapp.presentation.screen.landing.composables.LocationDetails
 import com.example.googlegpsapp.presentation.screen.landing.composables.LocationList
 import com.example.googlegpsapp.presentation.screen.landing.composables.NewLocation
@@ -25,16 +28,31 @@ fun LandingScreen(viewModel: LandingViewModel) {
     val scaffoldState = rememberScaffoldState()
     val showNewLocationDialog = remember { mutableStateOf(false) }
     val showLocationDetailsDialog = remember { mutableStateOf(false) }
+    val showErrorDialog = remember { mutableStateOf(false) }
 
     lateinit var locationItemSelected: LocationModel
+    lateinit var errorMessage: String
 
     when (locationProcessingState) {
         is LocationProcessingEvent.Done -> {
             viewModel.fetchLocation()
         }
-        else -> {
-            // TODO: Handle all the other state elegantly
+        is LocationProcessingEvent.LocationPermissionsError -> {
+            errorMessage = "To save a location first you need to grant location permissions"
+            showErrorDialog. value = true
         }
+        is LocationProcessingEvent.LocationNullError -> {
+            errorMessage = "Your device doesn't have location data, turn on your GPS"
+            showErrorDialog. value = true
+        }
+        is LocationProcessingEvent.Error -> {
+            errorMessage = "Something went wrong"
+            showErrorDialog. value = true
+        }
+        is LocationProcessingEvent.Processing -> {
+            // Processing Saving/Deleting
+        }
+        else -> {}
     }
 
     Scaffold(
@@ -68,7 +86,7 @@ fun LandingScreen(viewModel: LandingViewModel) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize().background(Color.Black),
             contentAlignment = Alignment.Center
         ) {
             with(locationsState) {
@@ -82,11 +100,11 @@ fun LandingScreen(viewModel: LandingViewModel) {
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    is LocationsEvent.NoData -> {
-                        Text(text = "Nothing to display.")
+                    is LocationsEvent.EmptyData -> {
+                        Text(text = "Nothing to display.", color = Color.White)
                     }
                     is LocationsEvent.Error -> {
-                        Text(text = "Something went wrong.")
+                        Text(text = "Something went wrong.", color = Color.White)
                     }
                     is LocationsEvent.Data -> {
                         LocationList(locations = this.locations, onLocationClick = { id ->
@@ -122,6 +140,17 @@ fun LandingScreen(viewModel: LandingViewModel) {
                         showLocationDetailsDialog.value = false
                         viewModel.deleteLocation(id)
                     })
+                }
+            }
+
+            if (showErrorDialog.value) {
+                Dialog(
+                    onDismissRequest = {
+                        showErrorDialog.value = false
+                    },
+                    properties = DialogProperties(),
+                ) {
+                    InfoContainer(message = errorMessage)
                 }
             }
         }

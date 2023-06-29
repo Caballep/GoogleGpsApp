@@ -1,6 +1,7 @@
 package com.example.googlegpsapp.data.repository
 
 import android.location.Location
+import com.example.googlegpsapp.core.EmptyLocationException
 import com.example.googlegpsapp.data.source.device.LocationProvider
 import com.example.googlegpsapp.domain.model.LocationModel
 import kotlinx.coroutines.tasks.await
@@ -39,8 +40,8 @@ class LocationRepository @Inject constructor(
     }
 
     suspend fun getLocationModels(): Result<List<LocationModel>> {
-        val locationEntities = googleGpsAppDao.getLocationEntities()
         return try {
+            val locationEntities = googleGpsAppDao.getLocationEntities()
             val locations = locationEntities.map { entity ->
                 LocationModel.from(entity)
             }
@@ -52,6 +53,7 @@ class LocationRepository @Inject constructor(
     }
 
     private suspend fun getLocation(): Location =
-        locationProvider.getCurrentLocation().await()
+        locationProvider.getCurrentLocation().await() ?: throw EmptyLocationException()
+
 
 }

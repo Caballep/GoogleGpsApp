@@ -9,7 +9,7 @@ class LocationProvider(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
 ) {
     @SuppressLint("MissingPermission")
-    fun getCurrentLocation(): Task<Location> {
+    fun getCurrentLocation(): Task<Location?> {
         return fusedLocationProviderClient.lastLocation
     }
 }
