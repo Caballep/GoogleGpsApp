@@ -49,13 +49,16 @@ class LandingViewModel @Inject constructor(
                     emitSaveLocationEvent(LocationProcessingEvent.Done)
                 }
                 is Outcome.Error -> {
-                    if (result.errorType == ErrorType.LOCATION_NO_PERMISSIONS) {
-                        emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
-                    }
-                    if (result.errorType == ErrorType.LOCATION_NULL_DATA) {
-                        emitSaveLocationEvent(LocationProcessingEvent.LocationNullError)
-                    } else {
-                        emitSaveLocationEvent(LocationProcessingEvent.Error)
+                    when(result.errorType) {
+                        ErrorType.LOCATION_NO_PERMISSIONS -> {
+                            emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
+                        }
+                        ErrorType.LOCATION_NULL_DATA -> {
+                            emitSaveLocationEvent(LocationProcessingEvent.LocationNullError)
+                        }
+                        else -> {
+                            emitSaveLocationEvent(LocationProcessingEvent.Error)
+                        }
                     }
                 }
             }

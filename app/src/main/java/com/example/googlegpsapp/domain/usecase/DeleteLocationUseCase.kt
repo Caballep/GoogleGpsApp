@@ -15,9 +15,6 @@ class DeleteLocationUseCase @Inject constructor(
         val result = locationRepository.deleteLocation(id)
         if (result.isFailure) {
             val e = result.exceptionOrNull()
-            if (e is SecurityException) {
-                return Outcome.Error(ErrorType.LOCATION_NO_PERMISSIONS)
-            }
             if (e is SQLiteAbortException || e is SQLiteAccessPermException || e is SQLiteDoneException) {
                 return Outcome.Error(ErrorType.SQL_ERROR)
             }

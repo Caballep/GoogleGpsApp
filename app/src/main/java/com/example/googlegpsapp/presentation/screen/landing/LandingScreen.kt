@@ -38,16 +38,17 @@ fun LandingScreen(viewModel: LandingViewModel) {
             viewModel.fetchLocation()
         }
         is LocationProcessingEvent.LocationPermissionsError -> {
-            errorMessage = "To save a location first you need to grant location permissions"
-            showErrorDialog. value = true
+            errorMessage =
+                "To save a location first you need to grant location permissions."
+            showErrorDialog.value = true
         }
         is LocationProcessingEvent.LocationNullError -> {
-            errorMessage = "Your device doesn't have location data, turn on your GPS"
-            showErrorDialog. value = true
+            errorMessage = "Your device doesn't have location data, turn on your GPS."
+            showErrorDialog.value = true
         }
         is LocationProcessingEvent.Error -> {
-            errorMessage = "Something went wrong"
-            showErrorDialog. value = true
+            errorMessage = "Something went wrong."
+            showErrorDialog.value = true
         }
         is LocationProcessingEvent.Processing -> {
             // Processing Saving/Deleting
@@ -86,7 +87,8 @@ fun LandingScreen(viewModel: LandingViewModel) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize().background(Color.Black),
+                .fillMaxSize()
+                .background(Color.Black),
             contentAlignment = Alignment.Center
         ) {
             with(locationsState) {
