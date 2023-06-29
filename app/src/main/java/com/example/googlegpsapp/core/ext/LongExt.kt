@@ -1,4 +1,4 @@
-package com.example.googlegpsapp.ext
+package com.example.googlegpsapp.core.ext
 
 import java.text.SimpleDateFormat
 import java.util.Date

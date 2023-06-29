@@ -1,7 +1,7 @@
 package com.example.googlegpsapp.domain.model
 
 import com.example.googlegpsapp.data.source.db.entity.LocationEntity
-import com.example.googlegpsapp.ext.timestampToFormattedDateTime
+import com.example.googlegpsapp.core.ext.timestampToFormattedDateTime
 
 data class LocationModel(
     val id: Int,
