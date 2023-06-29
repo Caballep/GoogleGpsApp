@@ -13,7 +13,8 @@ sealed class SaveLocationEvent {
 sealed class LocationsEvent {
     object Initial : LocationsEvent()
     object Loading : LocationsEvent()
-    data class Locations(val locations: List<LocationModel>) : LocationsEvent()
+    data class Data(val locations: List<LocationModel>) : LocationsEvent()
+    object NoData : LocationsEvent()
     object Error: LocationsEvent()
 }
 

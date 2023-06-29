@@ -59,7 +59,10 @@ class LandingViewModel @Inject constructor(
         getLocationJob = viewModelScope.launch {
             when(val result = getLocationUseCase.invoke()) {
                 is Outcome.Success -> {
-                    emitLocationsEvent(LocationsEvent.Locations(result.data))
+                    if (result.data.isEmpty()) {
+                        emitLocationsEvent(LocationsEvent.NoData)
+                    }
+                    emitLocationsEvent(LocationsEvent.Data(result.data))
                 }
                 is Outcome.Error -> {
                     emitLocationsEvent(LocationsEvent.Error)

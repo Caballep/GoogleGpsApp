@@ -7,6 +7,7 @@ import com.example.googlegpsapp.domain.util.ErrorType
 import com.example.googlegpsapp.data.repository.LocationRepository
 import com.example.googlegpsapp.domain.model.LocationModel
 import com.example.googlegpsapp.domain.util.Outcome
+import kotlinx.coroutines.delay
 
 import javax.inject.Inject
 
