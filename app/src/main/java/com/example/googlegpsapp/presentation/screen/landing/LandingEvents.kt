@@ -2,12 +2,12 @@ package com.example.googlegpsapp.presentation.screen.landing
 
 import com.example.googlegpsapp.domain.model.LocationModel
 
-sealed class SaveLocationEvent {
-    object Initial : SaveLocationEvent()
-    object Processing : SaveLocationEvent()
-    object Done : SaveLocationEvent()
-    object LocationPermissionsError : SaveLocationEvent()
-    object Error : SaveLocationEvent()
+sealed class LocationProcessingEvent {
+    object Initial : LocationProcessingEvent()
+    object Processing : LocationProcessingEvent()
+    object Done : LocationProcessingEvent()
+    object LocationPermissionsError : LocationProcessingEvent()
+    object Error : LocationProcessingEvent()
 }
 
 sealed class LocationsEvent {

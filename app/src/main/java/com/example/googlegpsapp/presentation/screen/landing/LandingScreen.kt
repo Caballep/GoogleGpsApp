@@ -19,7 +19,7 @@ import com.example.googlegpsapp.presentation.screen.landing.composables.NewLocat
 
 @Composable
 fun LandingScreen(viewModel: LandingViewModel) {
-    val saveLocationEvent by viewModel.saveLocationEvent.collectAsState()
+    val locationProcessingState by viewModel.locationProcessingEvent.collectAsState()
     val locationsState by viewModel.locationsEvent.collectAsState()
 
     val scaffoldState = rememberScaffoldState()
@@ -28,8 +28,8 @@ fun LandingScreen(viewModel: LandingViewModel) {
 
     lateinit var locationItemSelected: LocationModel
 
-    when (saveLocationEvent) {
-        is SaveLocationEvent.Done -> {
+    when (locationProcessingState) {
+        is LocationProcessingEvent.Done -> {
             viewModel.fetchLocation()
         }
         else -> {
@@ -119,7 +119,8 @@ fun LandingScreen(viewModel: LandingViewModel) {
                     properties = DialogProperties(),
                 ) {
                     LocationDetails(locationModel = locationItemSelected, onDelete = { id ->
-
+                        showLocationDetailsDialog.value = false
+                        viewModel.deleteLocation(id)
                     })
                 }
             }

@@ -29,7 +29,16 @@ class LocationRepository @Inject constructor(
         }
     }
 
-    suspend fun getLocationModel(): Result<List<LocationModel>> {
+    suspend fun deleteLocation(locationId: Int): Result<Unit> {
+        return try {
+            googleGpsAppDao.deleteLocation(locationId = locationId)
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    suspend fun getLocationModels(): Result<List<LocationModel>> {
         val locationEntities = googleGpsAppDao.getLocationEntities()
         return try {
             val locations = locationEntities.map { entity ->

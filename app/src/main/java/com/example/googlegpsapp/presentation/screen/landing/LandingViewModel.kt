@@ -2,6 +2,7 @@ package com.example.googlegpsapp.presentation.screen.landing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.googlegpsapp.domain.usecase.DeleteLocationUseCase
 import com.example.googlegpsapp.domain.usecase.GetLocationsUseCase
 import com.example.googlegpsapp.domain.usecase.SaveLocationUseCase
 import com.example.googlegpsapp.domain.util.ErrorType
@@ -17,16 +18,17 @@ import javax.inject.Inject
 @HiltViewModel
 class LandingViewModel @Inject constructor(
     private val saveLocationUseCase: SaveLocationUseCase,
+    private val deleteLocationUseCase: DeleteLocationUseCase,
     private val getLocationUseCase: GetLocationsUseCase
 ) : ViewModel() {
 
-    private var saveLocationJob: Job? = null
+    private var locationProcessingJob: Job? = null
     private var getLocationJob: Job? = null
 
-    private val _saveLocationEvent = MutableStateFlow<SaveLocationEvent>(SaveLocationEvent.Initial)
-    val saveLocationEvent: StateFlow<SaveLocationEvent> = _saveLocationEvent.asStateFlow()
-    private fun emitSaveLocationEvent(event: SaveLocationEvent) {
-        _saveLocationEvent.value = event
+    private val _locationProcessingEvent = MutableStateFlow<LocationProcessingEvent>(LocationProcessingEvent.Initial)
+    val locationProcessingEvent: StateFlow<LocationProcessingEvent> = _locationProcessingEvent.asStateFlow()
+    private fun emitSaveLocationEvent(event: LocationProcessingEvent) {
+        _locationProcessingEvent.value = event
     }
 
     private val _locationsEvent = MutableStateFlow<LocationsEvent>(LocationsEvent.Initial)
@@ -36,18 +38,36 @@ class LandingViewModel @Inject constructor(
     }
 
     fun saveLocation(name: String) {
-        saveLocationJob?.cancel()
-        emitSaveLocationEvent(SaveLocationEvent.Processing)
-        saveLocationJob = viewModelScope.launch {
+        locationProcessingJob?.cancel()
+        emitSaveLocationEvent(LocationProcessingEvent.Processing)
+        locationProcessingJob = viewModelScope.launch {
             when (val result = saveLocationUseCase.invoke(name)) {
                 is Outcome.Success -> {
-                    emitSaveLocationEvent(SaveLocationEvent.Done)
+                    emitSaveLocationEvent(LocationProcessingEvent.Done)
                 }
                 is Outcome.Error -> {
                     if (result.errorType == ErrorType.LOCATION_NO_PERMISSIONS) {
-                        emitSaveLocationEvent(SaveLocationEvent.LocationPermissionsError)
+                        emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
                     }
-                    emitSaveLocationEvent(SaveLocationEvent.Error)
+                    emitSaveLocationEvent(LocationProcessingEvent.Error)
+                }
+            }
+        }
+    }
+
+    fun deleteLocation(id: Int) {
+        locationProcessingJob?.cancel()
+        emitSaveLocationEvent(LocationProcessingEvent.Processing)
+        locationProcessingJob = viewModelScope.launch {
+            when (val result = deleteLocationUseCase.invoke(id)) {
+                is Outcome.Success -> {
+                    emitSaveLocationEvent(LocationProcessingEvent.Done)
+                }
+                is Outcome.Error -> {
+                    if (result.errorType == ErrorType.LOCATION_NO_PERMISSIONS) {
+                        emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
+                    }
+                    emitSaveLocationEvent(LocationProcessingEvent.Error)
                 }
             }
         }
@@ -73,7 +93,7 @@ class LandingViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        saveLocationJob?.cancel()
+        locationProcessingJob?.cancel()
         getLocationJob?.cancel()
     }
 }

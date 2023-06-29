@@ -1,7 +1,6 @@
 package com.example.googlegpsapp.data.source.db.entity
 
 import android.location.Location
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
