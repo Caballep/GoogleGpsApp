@@ -7,13 +7,14 @@ import androidx.compose.runtime.*
 
 @Composable
 fun LandingScreen(viewModel: LandingViewModel) {
-    val locationEvent by viewModel.locationEvent.collectAsState()
+    val saveLocationEvent by viewModel.saveLocationEvent.collectAsState()
+    val locationsState by viewModel.locationsEvent.collectAsState()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.fetchLocation()
+
                 }
             ) {
                 Icon(
@@ -23,31 +24,6 @@ fun LandingScreen(viewModel: LandingViewModel) {
             }
         }
     ) {
-        val scaffoldState = rememberScaffoldState()
 
-        LaunchedEffect(locationEvent) {
-            when (locationEvent) {
-                is LandingEvents.NewDetailedLocationModel -> {
-                    val locationModel = (locationEvent as LandingEvents.NewDetailedLocationModel).detailedLocationModel
-                    val message = "Latitude: ${locationModel.latitude}, Longitude: ${locationModel.longitude}"
-                    scaffoldState.snackbarHostState.showSnackbar(message)
-                }
-                is LandingEvents.ErrorGettingDetailedLocationModel -> {
-                    scaffoldState.snackbarHostState.showSnackbar("Error!")
-                }
-                else -> {}
-            }
-        }
-
-        Scaffold(
-            scaffoldState = scaffoldState,
-            snackbarHost = {
-                SnackbarHost(it) { action ->
-                    action.dismiss()
-                }
-            }
-        ) {
-            // Rest of your UI components
-        }
     }
 }

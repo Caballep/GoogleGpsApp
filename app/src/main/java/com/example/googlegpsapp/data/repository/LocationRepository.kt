@@ -1,28 +1,48 @@
 package com.example.googlegpsapp.data.repository
 
-import com.example.googlegpsapp.core.ErrorType
+import android.location.Location
 import com.example.googlegpsapp.data.source.device.LocationProvider
 import com.example.googlegpsapp.domain.model.LocationModel
 import kotlinx.coroutines.tasks.await
-import com.example.googlegpsapp.core.Result
+import com.example.googlegpsapp.data.source.db.GoogleGpsAppDao
+import com.example.googlegpsapp.data.source.db.entity.LocationEntity
 import javax.inject.Inject
 
 class LocationRepository @Inject constructor(
     private val locationProvider: LocationProvider,
+    private val googleGpsAppDao: GoogleGpsAppDao
 ) {
 
-    suspend fun getLocationModel(): Result<LocationModel> {
+    suspend fun saveLocation(locationName: String): Result<Unit> {
         return try {
-            val location = locationProvider.getCurrentLocation().await()
-            Result.Success(
-                LocationModel.fromLocation(location)
-            )
-        } catch (e: Exception) {
-            if (e is SecurityException) {
-                Result.Error<ErrorType>(ErrorType.LOCATION_NO_PERMISSIONS)
+            with(getLocation()) {
+                googleGpsAppDao.insertLocation(
+                    LocationEntity.from(
+                        name = locationName,
+                        location = this
+                    )
+                )
             }
-            Result.Error(ErrorType.UNKNOWN)
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
         }
     }
+
+    suspend fun getLocationModel(): Result<List<LocationModel>> {
+        val locationEntities = googleGpsAppDao.getLocationEntities()
+        return try {
+            val locations = locationEntities.map { entity ->
+                LocationModel.from(entity)
+            }
+            Result.success(locations)
+
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    private suspend fun getLocation(): Location =
+        locationProvider.getCurrentLocation().await()
 
 }

@@ -1,16 +1,19 @@
 package com.example.googlegpsapp.presentation.screen.landing
 
-import com.example.googlegpsapp.presentation.screen.landing.data.DetailedLocationModel
+import com.example.googlegpsapp.domain.model.LocationModel
 
-sealed class LandingEvents {
-    object Initial : LandingEvents()
-    object GettingDetailedLocationModel : LandingEvents()
-    data class NewDetailedLocationModel(val detailedLocationModel: DetailedLocationModel) : LandingEvents()
-    object ErrorGettingDetailedLocationModel : LandingEvents()
-    object SavingLocation
-    object LocationSaved
-    object NewErrorSavingLocation
-    object GettingSavedLocations
-    object SavedLocations
-    object ErrorGettingSavedLocations
+sealed class SaveLocationEvent {
+    object Initial : SaveLocationEvent()
+    object Processing : SaveLocationEvent()
+    object Done : SaveLocationEvent()
+    object LocationPermissionsError : SaveLocationEvent()
+    object Error : SaveLocationEvent()
 }
+
+sealed class LocationsEvent {
+    object Initial : LocationsEvent()
+    object Loading : LocationsEvent()
+    data class Locations(val locations: List<LocationModel>) : LocationsEvent()
+    object Error: LocationsEvent()
+}
+

@@ -1,6 +1,9 @@
 package com.example.googlegpsapp.di
 
+import com.example.googlegpsapp.data.source.db.GoogleGpsAppDatabase
 import android.app.Application
+import androidx.room.Room
+import com.example.googlegpsapp.data.source.db.GoogleGpsAppDao
 import com.example.googlegpsapp.data.source.device.LocationProvider
 import com.google.android.gms.location.LocationServices
 import dagger.Module
@@ -21,4 +24,19 @@ object DataModule {
         )
     }
 
+    @Provides
+    @Singleton
+    fun provideGoogleGpsAppDatabase(application: Application): GoogleGpsAppDatabase {
+        return Room.databaseBuilder(
+            application,
+            GoogleGpsAppDatabase::class.java,
+            "google_gps_app_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoogleGpsAppDao(database: GoogleGpsAppDatabase): GoogleGpsAppDao {
+        return database.googleGpsAppDao()
+    }
 }
