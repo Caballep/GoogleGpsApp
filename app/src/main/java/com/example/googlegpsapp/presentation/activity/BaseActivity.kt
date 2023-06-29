@@ -12,4 +12,6 @@ open class BaseActivity: ComponentActivity() {
         val permissionsHelper = PermissionsHelper(this)
         permissionsHelper.requestPermission(PermissionsHelper.Permission.ACCESS_FINE_LOCATION)
     }
+
+
 }

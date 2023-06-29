@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,9 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.googlegpsapp.domain.model.LocationModel
+import com.example.googlegpsapp.presentation.other.IntentHelper
 
 @Composable
 fun LocationDetails(locationModel: LocationModel, onDelete: (id: Int) -> Unit) {
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier.background(Color.White)
     ) {
@@ -49,8 +53,12 @@ fun LocationDetails(locationModel: LocationModel, onDelete: (id: Int) -> Unit) {
             ) {
                 ClickableText(
                     text = AnnotatedString("Open it in GoogleMaps"),
-                    onClick = { offset ->
-                        // Handle click event
+                    onClick = {
+                        IntentHelper(context = context).openGoogleMaps(
+                            latitude = locationModel.latitude,
+                            longitude = locationModel.longitude,
+                            locationName = locationModel.name
+                        )
                     },
                     style = TextStyle(
                         color = Color.Blue,
