@@ -23,7 +23,7 @@ class SaveLocationUseCase @Inject constructor(
                 return Outcome.Error(ErrorType.SQL_ERROR)
             }
             if (e is EmptyLocationException) {
-                return Outcome.Error(ErrorType.LOCATION_NULL_DATA)
+                return Outcome.Error(ErrorType.LOCATION_EMPTY_DATA)
             }
             return Outcome.Error(ErrorType.UNKNOWN)
         }

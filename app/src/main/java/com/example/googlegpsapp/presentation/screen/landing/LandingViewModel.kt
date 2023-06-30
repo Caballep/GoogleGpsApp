@@ -53,7 +53,7 @@ class LandingViewModel @Inject constructor(
                         ErrorType.LOCATION_NO_PERMISSIONS -> {
                             emitSaveLocationEvent(LocationProcessingEvent.LocationPermissionsError)
                         }
-                        ErrorType.LOCATION_NULL_DATA -> {
+                        ErrorType.LOCATION_EMPTY_DATA -> {
                             emitSaveLocationEvent(LocationProcessingEvent.LocationNullError)
                         }
                         else -> {

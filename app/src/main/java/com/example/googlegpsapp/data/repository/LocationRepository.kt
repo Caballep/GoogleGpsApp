@@ -55,5 +55,4 @@ class LocationRepository @Inject constructor(
     private suspend fun getLocation(): Location =
         locationProvider.getCurrentLocation().await() ?: throw EmptyLocationException()
 
-
 }

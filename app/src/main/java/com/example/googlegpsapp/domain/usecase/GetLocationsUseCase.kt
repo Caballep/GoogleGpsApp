@@ -24,7 +24,7 @@ class GetLocationsUseCase @Inject constructor(
             return Outcome.Error(ErrorType.UNKNOWN)
         }
 
-        val locationModels = result.getOrNull() ?: return Outcome.Error(ErrorType.EMPTY_DATA)
+        val locationModels = result.getOrDefault(emptyList())
         return Outcome.Success(locationModels)
     }
 }
