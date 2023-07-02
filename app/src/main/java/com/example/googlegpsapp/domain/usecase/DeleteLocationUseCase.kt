@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteAbortException
 import android.database.sqlite.SQLiteAccessPermException
 import android.database.sqlite.SQLiteDoneException
 import com.example.googlegpsapp.data.repository.LocationRepository
-import com.example.googlegpsapp.domain.util.ErrorType
-import com.example.googlegpsapp.domain.util.Outcome
+import com.example.googlegpsapp.domain.propagation.ErrorType
+import com.example.googlegpsapp.domain.propagation.Outcome
 import javax.inject.Inject
 
 class DeleteLocationUseCase @Inject constructor(

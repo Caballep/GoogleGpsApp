@@ -1,4 +1,4 @@
-package com.example.googlegpsapp.domain.util
+package com.example.googlegpsapp.domain.propagation
 
 enum class ErrorType {
     UNKNOWN,

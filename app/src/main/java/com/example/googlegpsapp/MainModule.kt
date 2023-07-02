@@ -1,4 +1,4 @@
-package com.example.googlegpsapp.di
+package com.example.googlegpsapp
 
 import com.example.googlegpsapp.data.source.db.GoogleGpsAppDatabase
 import android.app.Application

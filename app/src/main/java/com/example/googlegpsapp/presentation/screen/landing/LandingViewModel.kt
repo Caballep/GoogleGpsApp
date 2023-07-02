@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.googlegpsapp.domain.usecase.DeleteLocationUseCase
 import com.example.googlegpsapp.domain.usecase.GetLocationsUseCase
 import com.example.googlegpsapp.domain.usecase.SaveLocationUseCase
-import com.example.googlegpsapp.domain.util.ErrorType
+import com.example.googlegpsapp.domain.propagation.ErrorType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import com.example.googlegpsapp.domain.util.Outcome
+import com.example.googlegpsapp.domain.propagation.Outcome
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
