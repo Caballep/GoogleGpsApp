@@ -33,7 +33,7 @@ class SaveLocationUseCaseTest {
     @Test
     fun `invoke success`() = runBlocking {
         val locationName = "Somewhere in the rainbow"
-        coEvery { locationRepository.saveLocation(locationName) } returns Result.success(Unit)
+        coEvery { locationRepository.saveLocation(locationName) } returns Unit
 
         val result = saveLocationUseCase(locationName)
 
@@ -45,7 +45,7 @@ class SaveLocationUseCaseTest {
     @Test
     fun `invoke failure no_permissions`() = runBlocking {
         val locationName = "Somewhere in the rainbow"
-        coEvery { locationRepository.saveLocation(locationName) } returns Result.failure(SecurityException())
+        coEvery { locationRepository.saveLocation(locationName) } returns Unit
 
         val result = saveLocationUseCase(locationName)
 
@@ -59,7 +59,7 @@ class SaveLocationUseCaseTest {
     @Test
     fun `invoke failure sql_error`() = runBlocking {
         val locationName = "Somewhere in the rainbow"
-        coEvery { locationRepository.saveLocation(locationName) } returns Result.failure(SQLiteAbortException())
+        coEvery { locationRepository.saveLocation(locationName) } returns Unit
 
         val result = saveLocationUseCase(locationName)
 
@@ -73,7 +73,7 @@ class SaveLocationUseCaseTest {
     @Test
     fun `invoke failure location_empty_data`() = runBlocking {
         val locationName = "Somewhere in the rainbow"
-        coEvery { locationRepository.saveLocation(locationName) } returns Result.failure(EmptyLocationException())
+        coEvery { locationRepository.saveLocation(locationName) } returns Unit
 
         val result = saveLocationUseCase(locationName)
 
@@ -87,7 +87,7 @@ class SaveLocationUseCaseTest {
     @Test
     fun `invoke failure unknown`() = runBlocking {
         val locationName = "Somewhere in the rainbow"
-        coEvery { locationRepository.saveLocation(locationName) } returns Result.failure(Exception())
+        coEvery { locationRepository.saveLocation(locationName) } returns Unit
 
         val result = saveLocationUseCase(locationName)
 

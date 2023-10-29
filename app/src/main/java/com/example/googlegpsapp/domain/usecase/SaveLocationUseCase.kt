@@ -13,9 +13,9 @@ class SaveLocationUseCase @Inject constructor(
     private val locationRepository: LocationRepository
 ) {
     suspend operator fun invoke(name: String): Outcome<Unit> {
-        val result = locationRepository.saveLocation(name)
-        if (result.isFailure) {
-            val e = result.exceptionOrNull()
+        try {
+            locationRepository.saveLocation(name)
+        } catch (e: Throwable) {
             if (e is SecurityException) {
                 return Outcome.Error(ErrorType.LOCATION_NO_PERMISSIONS)
             }

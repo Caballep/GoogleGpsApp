@@ -14,19 +14,14 @@ class LocationRepository @Inject constructor(
     private val googleGpsAppDao: GoogleGpsAppDao
 ) {
 
-    suspend fun saveLocation(locationName: String): Result<Unit> {
-        return try {
-            with(getLocation()) {
-                googleGpsAppDao.insertLocation(
-                    LocationEntity.from(
-                        name = locationName,
-                        location = this
-                    )
+    suspend fun saveLocation(locationName: String): Unit {
+        with(getLocation()) {
+            googleGpsAppDao.insertLocation(
+                LocationEntity.from(
+                    name = locationName,
+                    location = this
                 )
-            }
-            Result.success(Unit)
-        } catch (t: Throwable) {
-            Result.failure(t)
+            )
         }
     }
 
